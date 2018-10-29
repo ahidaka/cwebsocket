@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Websocket client</title>
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-header">Websocket client</h1>
+        <hr>
+		<ul class="unstyled" id="log"></ul>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var ws;
+
+			if ("WebSocket" in window) {
+				//ws = new WebSocket($('#wsServer').val());
+				ws = new WebSocket("ws://aki:8088/echo");
+				ws.onopen = function() {
+					$('#log').append('<li><span class="badge">Start monitor</span></li>');
+					// sample badge colors
+					//$('#log').append('<li><span class="badge badge-important">badge-important</span></li>');
+					//$('#log').append('<li><span class="badge badge-warning">badge-warning</span></li>');
+					//$('#log').append('<li><span class="badge badge-success">badge-success</span></li>');
+					//$('#log').append('<li><span class="badge badge-info">badge-info</span></li>');
+					//$('#log').append('<li><span class="badge badge-inverse">badge-inverse</span></li>');
+
+					var message = "Hello";
+					ws.send(message);
+				};
+
+				ws.onerror = function() {
+					$('#log').append('<li><span class="badge badge-important">Error monitor</span></li>');
+				};
+
+				ws.onmessage = function(event) {
+					$('#log').append('<li>recieved: <span class="badge">' + event.data + '</span></li>');
+				};
+
+				ws.onclose = function() {
+					$('#log').append('<li><span class="badge">End monitor</span></li>');
+				};
+			} else {
+				$('#log').append('<li><span class="badge badge-important">Error browser</span></li>');
+			}
+        });
+    </script>
+</body>
+</html>
